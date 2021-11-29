@@ -1,0 +1,56 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "policyDefinitionName": {
+            "value": "policy-deny-expansive-acr"
+        },
+        "displayName": {
+            "value": "[Test] Deny Expansive ACR"
+        },
+        "policyRule": {
+            "value": {
+                "if": {
+                    "allOf": [
+                        {
+                            "field": "type",
+                            "equals": "Microsoft.ContainerRegistry/registries"
+                          },
+                          {
+                            "field": "Microsoft.ContainerRegistry/registries/sku.name",
+                            "notEquals": "Basic"
+                          }
+                    ]
+                },
+                "then": {
+                    "effect": "[parameters('effect')]"
+                }
+            }
+        },
+        "parameters": {
+            "value": {
+                "effect": {
+                    "allowedValues": [
+                        "Audit",
+                        "Deny",
+                        "Disabled"
+                    ],
+                    "defaultValue": "Deny",
+                    "metadata": {
+                        "description": "Enable or disable the execution of the policy",
+                        "displayName": "Effect"
+                    },
+                    "type": "String"
+                }
+            }
+        },
+        "metadata": {
+            "value": {
+                "category": "Container Registry"
+            }
+        },
+        "managementGroupId": {
+            "value": "mg-augpworkshop"
+        }
+    }
+}
